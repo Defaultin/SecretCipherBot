@@ -13,7 +13,8 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start', 'help'])
 def bot_start(message):
-    data[message.chat.id] = [None, 'encrypt', None, message.from_user.first_name, '@' + message.from_user.username, 'encrypt']
+    data[message.chat.id] = [None, 'encrypt', None,
+                             message.from_user.first_name, '@' + message.from_user.username, 'encrypt']
     bot.send_message(
         message.chat.id, "Hello! I can encode any text by a given key. \nSee everything I can do by pressing /commands.")
     bot.send_message(
@@ -133,7 +134,8 @@ def bot_get_text(message):
             bot.reply_to(message, crypt.post_encryption(
                 data[message.chat.id][2], data[message.chat.id][0]))
     elif data[message.chat.id][1] == 'decrypt' and all(letter in crypt.alphabet.values() for letter in message.text):
-        data[message.chat.id][2] = crypt.post_decryption(message.text, data[message.chat.id][0])
+        data[message.chat.id][2] = crypt.post_decryption(
+            message.text, data[message.chat.id][0])
         bot.reply_to(message, data[message.chat.id][2])
     elif message.text == "YES" and data[message.chat.id][1] == 'send':
         data[message.chat.id][1] = 'get_id'
@@ -176,4 +178,9 @@ def bot_get_other(message):
         message, "This command is not recognized! See supported /commands.")
 
 
-bot.polling()
+while True:
+    try:
+        bot.polling(none_stop=True)
+    except Exception as e:
+        logger.error(e)
+        time.sleep(15)
