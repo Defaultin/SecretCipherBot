@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 import encryption_tools as crypt
 import telebot
 
@@ -170,6 +164,7 @@ def bot_get_text(message):
                 message.chat.id, f"Your message is encoded and send to user @{user_info.username} successfully.")
         else:
             bot.send_message(message.chat.id, f"Error! User id is incorrect!")
+        data[message.chat.id][1] = 'encrypt'
 
     else:
         bot.reply_to(
@@ -183,41 +178,3 @@ def bot_get_other(message):
 
 
 bot.polling()
-
-
-# In[ ]:
-
-
-import encryption_tools as crypt
-import telebot
-
-
-def main():
-    print(crypt.alphabet.values())
-    text = str(input("Enter the message you want to encrypt: "))
-    key = str(input("Enter encryption key: "))
-    if all(letter in crypt.alphabet.values() for letter in text) and all(letter in crypt.alphabet.values() for letter in key):
-        message = crypt.post_encryption(text, key)
-        print(list(message))
-        print("Encrypted message:", message)
-        print("Decrypted message:", crypt.post_decryption(message, key))
-    else:
-        print("Error! An invalid symbol was found in the message.")
-
-
-if __name__ == "__main__":
-    main()
-
-
-# In[ ]:
-
-
-string = '123'
-string.isdigit()
-
-
-# In[ ]:
-
-
-
-
