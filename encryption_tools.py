@@ -1,10 +1,10 @@
-__all__ = ('post_encryption', 'post_decryption', 'alphabet')
+__all__ = ('post_encryption', 'post_decryption')
 
 
 def get_alphabet():
-    sym = {0: '\t', 1: '\n'}
-    eng = {i-30: chr(i) for i in range(32, 127)}
-    rus = {i-943: chr(i) for i in range(1040, 1106)}
+    sym = {0: '\n'}
+    eng = {i-31: chr(i) for i in range(32, 127)}
+    rus = {i-944: chr(i) for i in range(1040, 1106)}
     sym.update(eng)
     sym.update(rus)
     return sym
@@ -75,14 +75,17 @@ def pre_decryption(shifre, key):
     return ''.join(code_to_text(text))
 
 
-def post_encryption(text, key):
-    key_length, text_length = str(len(key)), len(text)
-    text = pre_encryption(text, key)
+def post_encryption(start_text, key):
+    key_length, text_length = str(len(key)), len(start_text)
+    text = pre_encryption(start_text, key)
     shifre = ''
     for i in range(text_length-1):
         shifre += pre_encryption(text[i], text[i+1])
     shifre += pre_encryption(text[-1], key_length)
-    return shifre
+    if shifre.endswith(' ') or shifre.startswith(' '):
+        post_encryption(start_text + '\n', key)
+    else:
+        return shifre
 
 
 def post_decryption(shifre, key):
