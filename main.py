@@ -13,8 +13,7 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start', 'help'])
 def bot_start(message):
-    data[message.chat.id] = [None, 'encrypt', None, message.from_user.first_name,
-                             message.from_user.last_name, '@' + message.from_user.username]
+    data[message.chat.id] = [None, 'encrypt', None, message.from_user.first_name, '@' + message.from_user.username, 'encrypt']
     bot.send_message(
         message.chat.id, "Hello! I can encode any text by a given key. \nSee everything I can do by pressing /commands.")
     bot.send_message(
@@ -51,9 +50,9 @@ def bot_set_mode(message):
 
 @bot.message_handler(commands=['show_mode'])
 def bot_show_mode(message):
-    if data[message.chat.id][1] == 'encrypt':
+    if data[message.chat.id][-1] == 'encrypt':
         mode = 'Encryption'
-    elif data[message.chat.id][1] == 'decrypt':
+    elif data[message.chat.id][-1] == 'decrypt':
         mode = 'Decryption'
     bot.send_message(message.chat.id, f"{mode} mode is on now.")
 
@@ -62,14 +61,14 @@ def bot_show_mode(message):
 def bot_encode(message):
     bot.send_message(
         message.chat.id, "I will encrypt all the following texts from you until you switch into decryption mode.")
-    data[message.chat.id][1] = 'encrypt'
+    data[message.chat.id][1] = data[message.chat.id][-1] = 'encrypt'
 
 
 @bot.message_handler(commands=['decode'])
 def bot_decode(message):
     bot.send_message(
         message.chat.id, "I will decrypt all the following texts from you until you switch into encryption mode.")
-    data[message.chat.id][1] = 'decrypt'
+    data[message.chat.id][1] = data[message.chat.id][-1] = 'decrypt'
 
 
 @bot.message_handler(commands=['send'])
@@ -108,12 +107,12 @@ def bot_get_text(message):
                 message, f"Error! Invalid symbols were found in your key: {unsupported_symbols}. \nTry another key. Will be more correct {clean_text}")
         else:
             bot.reply_to(message, f"Current key: {data[message.chat.id][0]}")
-            data[message.chat.id][1] = 'encrypt'
+            data[message.chat.id][1] = data[message.chat.id][-1]
     elif message.text == "ENCRYPT" and data[message.chat.id][1] == 'cipher_mode':
-        data[message.chat.id][1] = 'encrypt'
+        data[message.chat.id][1] = data[message.chat.id][-1] = 'encrypt'
         bot.reply_to(message, "Encryption mode has been set. I will encrypt all the following texts from you until you switch into decryption mode.", reply_markup=hide_modeboard)
     elif message.text == "DECRYPT" and data[message.chat.id][1] == 'cipher_mode':
-        data[message.chat.id][1] = 'decrypt'
+        data[message.chat.id][1] = data[message.chat.id][-1] = 'decrypt'
         bot.reply_to(message, "Decryption mode has been set. I will decrypt all the following texts from you until you switch into encryption mode.", reply_markup=hide_modeboard)
     elif data[message.chat.id][0] is None:
         bot.send_message(
@@ -134,8 +133,8 @@ def bot_get_text(message):
             bot.reply_to(message, crypt.post_encryption(
                 data[message.chat.id][2], data[message.chat.id][0]))
     elif data[message.chat.id][1] == 'decrypt' and all(letter in crypt.alphabet.values() for letter in message.text):
-        bot.reply_to(message, crypt.post_decryption(
-            message.text, data[message.chat.id][0]))
+        data[message.chat.id][2] = crypt.post_decryption(message.text, data[message.chat.id][0])
+        bot.reply_to(message, data[message.chat.id][2])
     elif message.text == "YES" and data[message.chat.id][1] == 'send':
         data[message.chat.id][1] = 'get_id'
         bot.reply_to(message, "Whom should I send it? Please input any user's id. To find out user's id use @userinfobot. \nThis user should launch @SecretCipherBot first to receive your message.", reply_markup=hide_keyboard)
@@ -161,10 +160,10 @@ def bot_get_text(message):
                 data[message.chat.id][2], data[message.chat.id][0]))
             user_info = bot.get_chat_member(user_id, user_id).user
             bot.send_message(
-                message.chat.id, f"Your message is encoded and send to user @{user_info.username} successfully.")
+                message.chat.id, f"Your message is encoded and sent to user @{user_info.username} successfully.")
         else:
             bot.send_message(message.chat.id, f"Error! User id is incorrect!")
-        data[message.chat.id][1] = 'encrypt'
+        data[message.chat.id][1] = data[message.chat.id][-1]
 
     else:
         bot.reply_to(
