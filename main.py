@@ -1,6 +1,5 @@
 import encryption_tools as crypt
 import telebot
-import time
 import logging
 
 TOKEN = '928164897:AAFs_L9eArxE_BdkGJdUw1NdhsTJaf8mlLQ'
@@ -185,4 +184,3 @@ while True:
         bot.polling(none_stop=True)
     except Exception as e:
         logging.error(e)
-        time.sleep(10)
