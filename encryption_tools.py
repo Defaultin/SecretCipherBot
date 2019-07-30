@@ -90,6 +90,14 @@ def post_encryption(start_text, key):
         for i in range(text_length-1):
             shifre += pre_encryption(text[i], text[i+1])
         shifre += pre_encryption(text[-1], key_length)
+    elif shifre.endswith('\n') or shifre.startswith('\n'):
+        start_text = start_text + ' '
+        key_length, text_length = str(len(key)), len(start_text)
+        text = pre_encryption(start_text, key)
+        shifre = ''
+        for i in range(text_length-1):
+            shifre += pre_encryption(text[i], text[i+1])
+        shifre += pre_encryption(text[-1], key_length)
     return shifre
 
 

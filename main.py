@@ -161,13 +161,17 @@ def bot_get_text(message):
     elif data[message.chat.id][1] == 'get_id':
         user_id = message.text
         if len(user_id) == 9 and user_id.isdigit():
-            bot.send_message(
-                user_id, '@' + message.from_user.username + ' sent you a secret message:')
-            bot.send_message(user_id, crypt.post_encryption(
-                data[message.chat.id][2], data[message.chat.id][0]))
-            user_info = bot.get_chat_member(user_id, user_id).user
-            bot.send_message(
-                message.chat.id, f"Your message is encoded and sent to user @{user_info.username} successfully.")
+            try:
+                bot.send_message(
+                    user_id, '@' + message.from_user.username + ' sent you a secret message:')
+                bot.send_message(user_id, crypt.post_encryption(
+                    data[message.chat.id][2], data[message.chat.id][0]))
+                user_info = bot.get_chat_member(user_id, user_id).user
+                bot.send_message(
+                    message.chat.id, f"Your message is encoded and sent to user @{user_info.username} successfully.")
+            except Exception as e:
+                logging.error(e)
+                bot.send_message(message.chat.id, f"Error! User id is incorrect!")
         else:
             bot.send_message(message.chat.id, f"Error! User id is incorrect!")
         data[message.chat.id][1] = data[message.chat.id][-1]
@@ -190,7 +194,7 @@ while True:
         dt.save_dataset(data)
     else:
         pass
-    
+
     try:
         bot.polling(none_stop=True)
     except Exception as e:
