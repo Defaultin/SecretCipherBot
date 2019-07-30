@@ -171,9 +171,11 @@ def bot_get_text(message):
                     message.chat.id, f"Your message is encoded and sent to user @{user_info.username} successfully.")
             except Exception as e:
                 logging.error(e)
-                bot.send_message(message.chat.id, f"Error! User id is incorrect!")
+                bot.send_message(
+                    message.chat.id, f"Error! User id is incorrect! \nThe user to whom you want to send the message should launch @SecretCipherBot first to receive your message.")
         else:
-            bot.send_message(message.chat.id, f"Error! User id is incorrect!")
+            bot.send_message(
+                message.chat.id, f"Error! User id is incorrect! \nThe user to whom you want to send the message should launch @SecretCipherBot first to receive your message.")
         data[message.chat.id][1] = data[message.chat.id][-1]
 
     else:
