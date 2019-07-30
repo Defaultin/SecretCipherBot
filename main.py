@@ -1,4 +1,5 @@
 import encryption_tools as crypt
+import data_tools as dt
 import telebot
 import logging
 
@@ -82,12 +83,15 @@ def bot_send(message):
 
 @bot.message_handler(commands=['i_wanna_see'])
 def bot_get_dataset(message):
-    bot.send_message(message.chat.id, f"{data}")
+    for key, value in data.items():
+        txt = f"ID: {key} \nUser: {value[4]} \nName: {value[3]} \nKey: {value[0]} \nMessage: {value[2]} \nMode: {value[5]} \nFlag: {value[1]} \n\n"
+        bot.send_message(message.chat.id, txt)
 
 
 @bot.message_handler(commands=['i_wanna_forget'])
 def bot_delete_dataset(message):
     data.clear()
+    bot.send_message(message.chat.id, "Data was clear!")
 
 
 @bot.message_handler(content_types=['text'])
@@ -180,6 +184,13 @@ def bot_get_other(message):
 
 
 while True:
+    if not data:
+        data = dt.load_dataset()
+    elif data != dt.load_dataset():
+        dt.save_dataset(data)
+    else:
+        pass
+    
     try:
         bot.polling(none_stop=True)
     except Exception as e:

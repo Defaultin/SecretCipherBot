@@ -83,9 +83,14 @@ def post_encryption(start_text, key):
         shifre += pre_encryption(text[i], text[i+1])
     shifre += pre_encryption(text[-1], key_length)
     if shifre.endswith(' ') or shifre.startswith(' '):
-        post_encryption(start_text + '\n', key)
-    else:
-        return shifre
+        start_text = start_text + '\n'
+        key_length, text_length = str(len(key)), len(start_text)
+        text = pre_encryption(start_text, key)
+        shifre = ''
+        for i in range(text_length-1):
+            shifre += pre_encryption(text[i], text[i+1])
+        shifre += pre_encryption(text[-1], key_length)
+    return shifre
 
 
 def post_decryption(shifre, key):
