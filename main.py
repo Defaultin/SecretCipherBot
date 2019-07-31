@@ -94,6 +94,20 @@ def bot_delete_dataset(message):
     bot.send_message(message.chat.id, "Data was clear!")
 
 
+@bot.message_handler(commands=['update_alphabet'])
+def bot_update_alphabet(message):
+    crypt.update_alphabet(random_update=True)
+    bot.send_message(
+        message.chat.id, f"Alphabet updated! Current alphabet: \n{crypt.alphabet}")
+
+
+@bot.message_handler(commands=['setdefault_alphabet'])
+def bot_setdefault_alphabet(message):
+    crypt.update_alphabet(random_update=False)
+    bot.send_message(
+        message.chat.id, f"Alphabet set to default! Current alphabet: \n{crypt.alphabet}")
+
+
 @bot.message_handler(content_types=['text'])
 def bot_get_text(message):
 
