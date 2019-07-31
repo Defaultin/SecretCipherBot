@@ -1,20 +1,20 @@
-__all__ = ('post_encryption', 'post_decryption')
+__all__ = ('post_encryption', 'post_decryption', 'update_alphabet')
+
+import random
+
+alphabet_list = ['\n'] + [chr(i) for i in range(32, 127)] + [chr(i) for i in range(
+    1024, 1119)] + ['Ä', 'Ö', 'Ü', 'ß', 'ä', 'ö', 'ü'] + [chr(i) for i in range(8208, 8224)]
+
+alphabet = {key: value for key, value in zip(
+    range(len(alphabet_list)), alphabet_list)}
 
 
-def get_alphabet():
-    sym = {0: '\n'}
-    eng = {i-31: chr(i) for i in range(32, 127)}
-    rus = {i-928: chr(i) for i in range(1024, 1119)}
-    deu = {191: 'Ä', 192: 'Ö', 193: 'Ü', 194: 'ß', 195: 'ä', 196: 'ö', 197: 'ü'}
-    other = {i-8010: chr(i) for i in range(8208, 8224)}
-    sym.update(eng)
-    sym.update(rus)
-    sym.update(deu)
-    sym.update(other)
-    return sym
-
-
-alphabet = get_alphabet()
+def update_alphabet(*, random_update=False):
+    alist = alphabet_list[::]
+    global alphabet
+    if random_update:
+        random.shuffle(alist)
+    alphabet = {key: value for key, value in zip(range(len(alist)), alist)}
 
 
 def comparator(value, key):
