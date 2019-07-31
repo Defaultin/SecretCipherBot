@@ -99,10 +99,11 @@ def bot_get_text(message):
 
     def clean_message(text):
         text, unsupported_symbols = list(text), []
-        for letter in text:
-            if letter not in crypt.alphabet.values():
-                text.remove(letter)
-                unsupported_symbols.append(letter)
+        for _ in range(2):
+            for letter in text:
+                if letter not in crypt.alphabet.values():
+                    text.remove(letter)
+                    unsupported_symbols.append(letter)
         return ''.join(text), unsupported_symbols
     clean_text, unsupported_symbols = clean_message(message.text)
 
