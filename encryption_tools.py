@@ -4,9 +4,9 @@ __all__ = ('post_encryption', 'post_decryption')
 def get_alphabet():
     sym = {0: '\n'}
     eng = {i-31: chr(i) for i in range(32, 127)}
-    rus = {i-944: chr(i) for i in range(1024, 1119)}
-    deu = {175: 'Ä', 176: 'Ö', 177: 'Ü', 178: 'ß', 179: 'ä', 180: 'ö', 181: 'ü'}
-    other = {i-8026: chr(i) for i in range(8208, 8224)}
+    rus = {i-928: chr(i) for i in range(1024, 1119)}
+    deu = {191: 'Ä', 192: 'Ö', 193: 'Ü', 194: 'ß', 195: 'ä', 196: 'ö', 197: 'ü'}
+    other = {i-8010: chr(i) for i in range(8208, 8224)}
     sym.update(eng)
     sym.update(rus)
     sym.update(deu)
