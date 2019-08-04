@@ -13,16 +13,31 @@ modeboard.row('ENCRYPT', 'DECRYPT')
 bot = telebot.TeleBot(TOKEN)
 
 
-@bot.message_handler(commands=['start', 'help'])
+@bot.message_handler(commands=['start'])
 def bot_start(message):
     data[message.chat.id] = [None, 'encrypt', None,
                              message.from_user.first_name, '@' + message.from_user.username, 'encrypt']
     dt.save_dataset(data)
     bot.send_message(
-        message.chat.id, "Hello! I can encode any text by a given key. \nSee everything I can do by pressing /commands.")
+        message.chat.id, "Hello! I can encode any text by a given key. \nSee everything I can do by pressing /help or /commands.")
     bot.send_message(
         message.chat.id, "To start encoding we need to set a key. Use command /set_key. \nAfter you've set the key, you can send me any text to encode.")
 
+    
+@bot.message_handler(commands=['help'])
+def bot_start(message): 
+    help_info = """This bot can encrypt and decrypt any text by a given key. 
+    \nFirst you need to set the key using the command /set_key. 
+    \nYou can also view the current key with the command /show_key. 
+    \nTo encrypt or decrypt any text, you should send it to the bot, with setting up the desired encryption mode using the command /set_mode or directly /encode or /encode.
+    \nYou can also view the current encryption mode with the command /show_mode. 
+    \nTo send a message to a Telegram user, use the command /send. Remember that in order for the user to receive the message and successfully decrypt it, he should run the @SecretCipherBot and know the current encryption key that the sender knows in advance. 
+    \nThe encryption speed of this bot is about 15.100 symbols per second, and decryption is 14.900 symbols per second. The speed may vary depending on the server load.
+    \nThe bot can clear the text of unsupported symbols with your consent, notifying about this during the encryption process.
+    \nIn order to avoid difficulties with the translation, use a @YTranslateBot.
+    \nFor any questions, contact the developer (this information is available in the description)."""
+    bot.send_message(message.chat.id, help_info)
+    
 
 @bot.message_handler(commands=['commands'])
 def bot_commands(message):
