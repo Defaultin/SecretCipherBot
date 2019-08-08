@@ -4,8 +4,7 @@ import telebot
 import logging
 
 TOKEN = '928164897:AAFs_L9eArxE_BdkGJdUw1NdhsTJaf8mlLQ'
-#data = dt.load_dataset()
-data = {} 
+data = dt.load_dataset()
 hide_keyboard = hide_modeboard = telebot.types.ReplyKeyboardRemove()
 keyboard = telebot.types.ReplyKeyboardMarkup(True, True)
 keyboard.row('YES', 'NO')
@@ -18,7 +17,7 @@ bot = telebot.TeleBot(TOKEN)
 def bot_start(message):
     data[message.chat.id] = [None, 'encrypt', None,
                              message.from_user.first_name, '@' + message.from_user.username, 'encrypt']
-    #dt.save_dataset(data)
+    dt.save_dataset(data)
     bot.send_message(
         message.chat.id, "Hello! I can encode any text by a given key. \nSee everything I can do by pressing /help or /commands.")
     bot.send_message(
@@ -213,8 +212,8 @@ def bot_get_text(message):
         bot.reply_to(
             message, "Error! Invalid symbols were found in the message.")
 
-    #if data != dt.load_dataset():
-        #dt.save_dataset(data)
+    if data != dt.load_dataset():
+        dt.save_dataset(data)
 
 
 @bot.message_handler(func=lambda message: True, content_types=['photo', 'document', 'audio', 'sticker', 'voice'])
