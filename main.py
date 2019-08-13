@@ -15,17 +15,21 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def bot_start(message):
-    data[message.chat.id] = [None, 'encrypt', None,
-                             message.from_user.first_name, '@' + message.from_user.username, 'encrypt']
+    if message.from_user.username is None:
+        data[message.chat.id] = [None, 'encrypt', None, message.from_user.first_name,
+                                 f'Unknown user with id: {message.chat.id}', 'encrypt']
+    else:
+        data[message.chat.id] = [None, 'encrypt', None,
+                                 message.from_user.first_name, '@' + message.from_user.username, 'encrypt']
     dt.save_dataset(data)
     bot.send_message(
         message.chat.id, "Hello! I can encode any text by a given key. \nSee everything I can do by pressing /help or /commands.")
     bot.send_message(
         message.chat.id, "To start encoding we need to set a key. Use command /set_key. \nAfter you've set the key, you can send me any text to encode.")
 
-    
+
 @bot.message_handler(commands=['help'])
-def bot_start(message): 
+def bot_start(message):
     help_info = """This bot can encrypt and decrypt any text by a given key. 
     \nFirst you need to set the key using the command /set_key. 
     \nYou can also view the current key with the command /show_key. 
@@ -37,7 +41,7 @@ def bot_start(message):
     \nIn order to avoid difficulties with the translation, use a @YTranslateBot.
     \nFor any questions, contact the developer (this information is available in the description)."""
     bot.send_message(message.chat.id, help_info)
-    
+
 
 @bot.message_handler(commands=['commands'])
 def bot_commands(message):
@@ -194,7 +198,7 @@ def bot_get_text(message):
         if len(user_id) == 9 and user_id.isdigit():
             try:
                 bot.send_message(
-                    user_id, '@' + message.from_user.username + ' sent you a secret message:')
+                    user_id, data[message.chat.id][4] + ' sent you a secret message:')
                 bot.send_message(user_id, crypt.post_encryption(
                     data[message.chat.id][2], data[message.chat.id][0]))
                 user_info = bot.get_chat_member(user_id, user_id).user
