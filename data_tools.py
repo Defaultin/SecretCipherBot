@@ -3,11 +3,13 @@ import pickle
 
 
 def save_dataset(dataset):
-    with open('dataset.txt', 'wb') as out_put:
-        pickle.dump(dataset, out_put)
+    in_file = open('dataset.txt', 'w')
+    pickle.dump(dataset, in_file)
+    in_file.close()
 
 
 def load_dataset():
-    with open('dataset.txt', 'rb') as in_put:
-        dataset = pickle.load(in_put)
+    out_file = open('dataset.txt', 'r')
+    dataset = pickle.load(out_file)
+    out_file.close()
     return dataset
